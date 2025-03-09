@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graphics Showcase</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #ff4b93;
+            --dark: #0a0a0a;
+            --darker: #050505;
+            --light: #ffffff;
+            --accent: #3a86ff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body { 
+            background-color: var(--dark);
+            color: var(--light);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+        }
+        
+        .header {
+            padding: 10vh 5vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
+        }
+        
+        .title {
+            font-size: clamp(2.5rem, 7vw, 5rem);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, var(--primary), #9f53ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .bg-noise {
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.05;
+            mix-blend-mode: overlay;
+            pointer-events: none;
+        }
+        
+        /* Slider section */
+        .slider-section {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .horizontal-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: max-content;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 5vw;
+        }
+        
+        .card {
+            width: 35vw;
+            height: 70vh;
+            min-width: 300px;
+            max-width: 600px;
+            margin-right: 5vw;
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+            background-color: rgba(255, 255, 255, 0.02);
+            transform-origin: center left;
+            transition: transform 0.5s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card:hover {
+            transform: scale(1.02);
+        }
+        
+        .card-image {
+            flex: 1;
+            position: relative;
+            background-color: #0a0a0a;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .card-image img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            transition: transform 1s ease;
+        }
+        
+        .card:hover .card-image img {
+            transform: scale(1.05);
+        }
+        
+ 
+        .card-content {
+            padding: 1.5rem;
+            flex: 0 0 auto;
+            background-color: rgba(10, 10, 10, 0.9);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--light);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .card-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 2rem;
+            height: 2px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            border-radius: 1px;
+        }
+
+        .card-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            font-weight: 300;
+            margin-top: 0.25rem;
+        }
+
+
+        .card {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .card:hover .card-title {
+            color: var(--primary);
+        }
+
+        .progress-container {
+            position: fixed;
+            bottom: 5vh;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30%;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            z-index: 100;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background-color: var(--primary);
+            border-radius: 2px;
+        }
+        
+        footer {
+            padding: 4rem 2rem;
+            text-align: center;
+            background-color: var(--darker);
+        }
+        
+        .footer-logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+        
+        .logo-accent {
+            color: var(--primary);
+        }
+        
+    /* Responsive improvements */
+    @media (max-width: 768px) {
+        .card-content {
+        padding: 1.25rem;
+        }
+    
+        .card-title {
+        font-size: 1.1rem;
+        }
+    
+        .card-description {
+        font-size: 0.85rem;
+        }
+    }
+    </style>
+</head>
+<body>
+    <div class="bg-noise"></div>
+    
+    <header class="header">
+        <div class="header-content">
+            <h1 class="title">Graphics Design Showcase</h1>
+            <p class="subtitle">Some of my graphic design collections created for activities, like branding, and visual identity projects.</p>
+        </div>
+    </header>
+    
+    <section class="slider-section">
+        <div class="horizontal-slider">
+            <!-- Business Cards -->
+            <div class="card">
+                <div class="card-image">
+                    <img alt="Business Card Design 1" src="images/bc1.png" />
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">Business Card | Real Estate</h3>
+                    <p class="card-description">Professional business card designs with modern typography and clean layouts.(FRONT)</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-image">
+                    <img alt="Business Card Design 2" src="images/bc2.png" />
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">Business Card | Real Estate</h3>
+                    <p class="card-description">Bold and distinctive business card designs that make a lasting impression. (BACK)</p>
+                </div>
+            </div>
+            
+            <!-- Logo Design -->
+            <div class="card">
+                <div class="card-image">
+                    <img alt="Logo Design 1" src="images/logo1.png" />
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">Logo | Real Estate</h3>
+                    <p class="card-description">Clean, minimalist logo design focusing on simplicity and brand recognition.</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-image">
+                    <img alt="Logo Design 2" src="images/logo2.png" />
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">Logo | Application</h3>
+                    <p class="card-description">Creative logo design with vibrant colors and contemporary aesthetics.</p>
+                </div>
+            </div>
+            
+            <!-- Poster Designs -->
+            <div class="card">
+                <div class="card-image">
+                    <img alt="Poster Design 1" src="images/poster1.png" />
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">Poster | Special Offer </h3>
+                    <p class="card-description">Eye-catching event poster with striking typography and visual elements.</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-image">
+                    <img alt="Poster Design 2" src="images/poster2.png" />
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">Poster | Campaign Post</h3>
+                    <p class="card-description">Bold promotional design with impactful messaging and visual hierarchy.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <div class="progress-container">
+        <div class="progress-bar"></div>
+    </div>
+    
+   <footer>
+    <div class="footer-logo">DESIGN<span class="logo-accent">WORKS</span></div>
+    <p style="margin-top: 0.5rem; font-size: 0.875rem; color: rgba(255, 255, 255, 0.7);">
+        © 2025 All Rights Reserved By Almina Tanglao.
+    </p>
+</footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            gsap.registerPlugin(ScrollTrigger);
+            
+            const slider = document.querySelector('.horizontal-slider');
+            const progressBar = document.querySelector('.progress-bar');
+            
+            const sliderWidth = slider.offsetWidth;
+            const viewportWidth = window.innerWidth;
+            const distanceToScroll = sliderWidth - viewportWidth;
+            
+            const scrollTween = gsap.to(slider, {
+                x: -distanceToScroll,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: ".slider-section",
+                    start: "top top",
+                    end: `+=${distanceToScroll}`,
+                    scrub: 1,
+                    pin: true,
+                    anticipatePin: 1,
+                    invalidateOnRefresh: true,
+                    onUpdate: (self) => {
+                        progressBar.style.width = `${self.progress * 100}%`;
+                    
+                        const cards = document.querySelectorAll('.card');
+                        cards.forEach((card, index) => {
+                            const cardRect = card.getBoundingClientRect();
+                            const cardCenter = cardRect.left + cardRect.width / 2;
+                            const screenCenter = window.innerWidth / 2;
+                            const distance = Math.abs(cardCenter - screenCenter);
+                            const maxDistance = window.innerWidth / 2;
+                            const scale = gsap.utils.clamp(0.8, 1, 1 - (distance / maxDistance) * 0.2);
+                            
+                            gsap.set(card, {
+                                scale: scale,
+                                opacity: gsap.utils.clamp(0.6, 1, scale)
+                            });
+                        });
+                    }
+                }
+            });
+
+            window.addEventListener('resize', () => {
+                ScrollTrigger.refresh();
+            });
+        });
+    </script>
+</body>
+</html>
